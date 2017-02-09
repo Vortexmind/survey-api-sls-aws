@@ -124,7 +124,7 @@ functions:
 resources:
   Resources:
     surveysTable:
-      Type: AWS:DynamoDB:Table
+      Type: AWS::DynamoDB::Table
       Properties:
           TableName: surveysTable
           AttributeDefinitions:
