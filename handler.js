@@ -1,16 +1,29 @@
 'use strict';
 
 module.exports.surveys = (event, context, callback) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
-    }),
-  };
 
-  callback(null, response);
+  const done = (err, res) => callback(null, {
+      statusCode: err ? '400' : '200',
+      body: err ? err.message : JSON.stringify(res),
+      headers: {
+          'Content-Type': 'application/json',
+      },
+  });
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
+  switch (event.httpMethod) {
+      case 'DELETE':
+          dynamo.deleteItem(JSON.parse(event.body), done);
+          break;
+      case 'GET':
+          dynamo.scan({ TableName: event.queryStringParameters.TableName }, done);
+          break;
+      case 'POST':
+          dynamo.putItem(JSON.parse(event.body), done);
+          break;
+      case 'PUT':
+          dynamo.updateItem(JSON.parse(event.body), done);
+          break;
+      default:
+          done(new Error('Unsupported method "${event.httpMethod}"'));
+  }
 };
