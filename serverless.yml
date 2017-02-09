@@ -128,11 +128,8 @@ resources:
       Properties:
           TableName: surveysTable
           AttributeDefinitions:
-              - AttributeName: SurveyName
-                AttributeType: S
+              - AttributeName: Id
+                AttributeType : N
           KeySchema:
               - AttributeName: Id
                 KeyType: HASH
-          ProvisionedThroughput:
-            ReadCapacityUnits: 1
-            WriteCapacityUnits: 1
