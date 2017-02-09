@@ -72,6 +72,7 @@ provider:
 functions:
   surveys:
       handler: handler.surveys
+      events:
         - http:
             path: surveys
             method: post
