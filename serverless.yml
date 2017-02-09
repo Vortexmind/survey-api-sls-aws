@@ -128,8 +128,6 @@ resources:
       Properties:
           TableName: surveysTable
           AttributeDefinitions:
-              - AttributeName: Id
-                AttributeType : N
               - AttributeName: SurveyName
                 AttributeType: S
           KeySchema:
