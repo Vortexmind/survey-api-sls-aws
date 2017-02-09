@@ -23,6 +23,19 @@ provider:
   stage: dev
   region: eu-west-1
   profile: PaoloT-cli
+  memorySize : 128
+  iamRoleStatements:
+      - Effect: Allow
+        Action:
+            - dynamodb:DescribeTable
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+        Resource: "arn:aws:dynamodb:eu-west-1:*:*"
+
 
 # you can overwrite defaults here
 #  stage: dev
@@ -57,14 +70,24 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  surveyExist:
-      handler: handler.hello
-  surveyCreate:
-      handler: handler.hello
-  surveyUpdate:
-      handler: handler.hello
-
-
+  surveys:
+      handler: handler.surveys
+        - http:
+            path: surveys
+            method: post
+            cors: true
+        - http:
+            path: surveys
+            method: get
+            cors: true
+        - http:
+            path: surveys
+            method: put
+            cors: true
+        - http:
+            path: surveys
+            method: delete
+            cors: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -96,3 +119,21 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+resources:
+  Resources:
+    surveysTable:
+      Type: AWS:DynamoDB:Table
+      Properties:
+          TableName: surveysTable
+          AttributeDefinitions:
+              - AttributeName: Id
+                AttributeType : N
+              - AttributeName: SurveyName
+                AttributeType: S
+          KeySchema:
+              - AttributeName: Id
+                KeyType: HASH
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
