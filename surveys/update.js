@@ -26,7 +26,8 @@ module.exports.update = (event, context, callback) => {
       ':name': data.name,
       ':updatedAt': timestamp,
     },
-    UpdateExpression: 'SET #survey_name = :name, updatedAt = :updatedAt',
+    ConditionExpression: 'attribute_exists(createdAt)',
+    UpdateExpression: 'SET #survey_name = :name, updatedAt = :updatedAt, createdAt = if_not_exists(createdAt,:updatedAt)',
     ReturnValues: 'ALL_NEW',
   };
 
