@@ -5,10 +5,11 @@ const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.get = (event, context, callback) => {
+
   const params = {
     TableName: "survey-api-table",
     Key: {
-      id: event.pathParameters.id,
+      id: parseInt(event.pathParameters.id),
     },
   };
 

@@ -17,7 +17,7 @@ module.exports.update = (event, context, callback) => {
   const params = {
     TableName: "survey-api-table",
     Key: {
-      id: event.pathParameters.id,
+      id: parseInt(event.pathParameters.id),
     },
     ExpressionAttributeNames: {
       '#survey_name': 'name',
