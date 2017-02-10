@@ -7,9 +7,9 @@ provider:
   apiKeys:
     - ${self:service}-${opt:stage, self:provider.stage}
   runtime: nodejs4.3
-  stage: dev
-  region: eu-west-1
-  profile: PaoloT-cli
+  stage: ${env:SLS_STAGE,dev}
+  region: ${env:SLS_REGION,eu-west-1}
+  profile: ${env:SLS_PROFILE}
   memorySize : 128
   versionFunctions: false
   environment:
