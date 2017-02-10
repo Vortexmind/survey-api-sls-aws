@@ -14,7 +14,7 @@ module.exports.create = (event, context, callback) => {
   }
 
   const params = {
-    TableName: "survey-api-table",
+    TableName: process.env.DYNAMODB_TABLE,
     Item: {
       id: data.id,
       name : data.name,

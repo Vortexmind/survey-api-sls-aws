@@ -7,7 +7,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 module.exports.get = (event, context, callback) => {
 
   const params = {
-    TableName: "survey-api-table",
+    TableName: process.env.DYNAMODB_TABLE,
     Key: {
       id: parseInt(event.pathParameters.id),
     },

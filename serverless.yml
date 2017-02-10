@@ -12,6 +12,8 @@ provider:
   profile: PaoloT-cli
   memorySize : 128
   versionFunctions: false
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
   iamRoleStatements:
       - Effect: Allow
         Action:
@@ -21,7 +23,7 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/survey-api-table"
+        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
   create:
@@ -75,7 +77,7 @@ resources:
       Type: AWS::DynamoDB::Table
       # DeletionPolicy: Retain
       Properties:
-          TableName: survey-api-table
+          TableName: ${self:provider.environment.DYNAMODB_TABLE}
           AttributeDefinitions:
               - AttributeName: id
                 AttributeType : N

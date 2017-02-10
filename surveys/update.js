@@ -15,7 +15,7 @@ module.exports.update = (event, context, callback) => {
   }
 
   const params = {
-    TableName: "survey-api-table",
+    TableName: process.env.DYNAMODB_TABLE,
     Key: {
       id: parseInt(event.pathParameters.id),
     },
