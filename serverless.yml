@@ -4,7 +4,8 @@ frameworkVersion: ">=1.1.0 <2.0.0"
 
 provider:
   name: aws
-  apiKeys: ${self:service}-${opt:stage, self:provider.stage}
+  apiKeys:
+    - ${self:service}-${opt:stage, self:provider.stage}
   runtime: nodejs4.3
   stage: dev
   region: eu-west-1
@@ -22,7 +23,7 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${env:DYNAMODB_TABLE}"
+        Resource: "arn:aws:dynamodb:${self:provider.region}:*:*"
 
 functions:
   create:
