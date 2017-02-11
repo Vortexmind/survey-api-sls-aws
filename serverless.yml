@@ -131,7 +131,7 @@ resources:
         Type: AWS::DynamoDB::Table
         # DeletionPolicy: Retain
         Properties:
-          TableName: ${self:provider.environment.QUESTION_SETS_TABLE}
+          TableName: ${self:provider.environment.RESPONSES_TABLE}
           AttributeDefinitions:
             - AttributeName: id
               AttributeType: N
