@@ -101,11 +101,7 @@ resources:
           AttributeDefinitions:
             - AttributeName: surveyId
               AttributeType: N
-            - AttributeName: name
-              AttributeType: S
             - AttributeName: createdAt
-              AttributeType: N
-            - AttributeName: updatedAt
               AttributeType: N
           KeySchema:
             - AttributeName: surveyId
@@ -140,8 +136,6 @@ resources:
             - AttributeName: id
               AttributeType: N
             - AttributeName: surveyId
-              AttributeType: N
-            - AttributeName: createdAt
               AttributeType: N
           KeySchema:
             - AttributeName: id
