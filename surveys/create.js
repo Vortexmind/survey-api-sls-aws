@@ -15,12 +15,13 @@ module.exports.create = (event, context, callback) => {
 
   const params = {
     TableName: process.env.SURVEYS_TABLE,
+    ConditionExpression: 'attribute_not_exists(surveyId)',
     Item: {
       surveyId: data.id,
       name : data.name,
       createdAt: timestamp,
       updatedAt: timestamp,
-    },
+    }
   };
 
   dynamoDb.put(params, (error, result) => {
