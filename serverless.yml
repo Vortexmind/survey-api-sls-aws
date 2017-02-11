@@ -13,7 +13,9 @@ provider:
   memorySize : 128
   versionFunctions: false
   environment:
-    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    SURVEYS_TABLE: survey-api-surveys-${opt:stage, self:provider.stage}
+    QUESTION_SETS_TABLE: survey-api-question-sets-${opt:stage, self:provider.stage}
+    RESPONSES_TABLE: survey-api-responses-${opt:stage, self:provider.stage}
   iamRoleStatements:
       - Effect: Allow
         Action:
@@ -23,10 +25,10 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/survey-api-*"
 
 functions:
-  create:
+  createSurvey:
       handler: surveys/create.create
       events:
         - http:
@@ -35,7 +37,7 @@ functions:
             cors: true
             private: true
 
-  get:
+  getSurvey:
       handler: surveys/get.get
       events:
         - http:
@@ -44,7 +46,7 @@ functions:
             cors: true
             private: true
 
-  update:
+  updateSurvey:
       handler: surveys/update.update
       events:
         - http:
@@ -53,7 +55,7 @@ functions:
             cors: true
             private: true
 
-  delete:
+  deleteSurvey:
       handler: surveys/delete.delete
       events:
         - http:
@@ -62,12 +64,30 @@ functions:
             cors: true
             private: true
 
-  list:
+  listSurveys:
       handler: surveys/list.list
       events:
       - http:
           path: surveys
           method: get
+          cors: true
+          private: true
+
+  createQuestionSet:
+      handler: questionSets/create.create
+      events:
+      - http:
+          path: question-sets
+          method: post
+          cors: true
+          private: true
+
+  createResponse:
+      handler: responses/create.create
+      events:
+      - http:
+          path: responses
+          method: post
           cors: true
           private: true
 
@@ -77,13 +97,57 @@ resources:
       Type: AWS::DynamoDB::Table
       # DeletionPolicy: Retain
       Properties:
-          TableName: ${self:provider.environment.DYNAMODB_TABLE}
+          TableName: ${self:provider.environment.SURVEYS_TABLE}
           AttributeDefinitions:
-              - AttributeName: id
-                AttributeType : N
+            - AttributeName: surveyId
+              AttributeType: N
+            - AttributeName: name
+              AttributeType: S
+            - AttributeName: createdAt
+              AttributeType: N
+            - AttributeName: updatedAt
+              AttributeType: N
           KeySchema:
-              - AttributeName: id
-                KeyType: HASH
+            - AttributeName: surveyId
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
           ProvisionedThroughput:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1
+
+    questionSetsTable:
+        Type: AWS::DynamoDB::Table
+        # DeletionPolicy: Retain
+        Properties:
+          TableName: ${self:provider.environment.QUESTION_SETS_TABLE}
+          AttributeDefinitions:
+            - AttributeName: surveyId
+              AttributeType : N
+          KeySchema:
+            - AttributeName: surveyId
+              KeyType: HASH
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+
+    responsesTable:
+        Type: AWS::DynamoDB::Table
+        # DeletionPolicy: Retain
+        Properties:
+          TableName: ${self:provider.environment.QUESTION_SETS_TABLE}
+          AttributeDefinitions:
+            - AttributeName: id
+              AttributeType: N
+            - AttributeName: surveyId
+              AttributeType: N
+            - AttributeName: createdAt
+              AttributeType: N
+          KeySchema:
+            - AttributeName: id
+              KeyType: HASH
+            - AttributeName: surveyId
+              KeyType: RANGE
+          ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
