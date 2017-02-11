@@ -101,13 +101,9 @@ resources:
           AttributeDefinitions:
             - AttributeName: surveyId
               AttributeType: N
-            - AttributeName: createdAt
-              AttributeType: N
           KeySchema:
             - AttributeName: surveyId
               KeyType: HASH
-            - AttributeName: createdAt
-              KeyType: RANGE
           ProvisionedThroughput:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1
