@@ -6,14 +6,11 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const validateResponses = function(responsesList) {
 
-  if (!(Array.isArray(questionList))) return false;
+  if (!(Array.isArray(responsesList))) return false;
 
   for (var i=0; i < responsesList.length; i++) {
     if (typeof responsesList[i].question !== 'string' ||
-        !(Array.isArray(responsesList[i].answers)) ) return false;
-    for (var j=0; j < responsesList[i].answers.length; j++) {
-      if (typeof responsesList[i].answers[j] !== 'string') return false;
-    }
+        typeof responsesList[i].response !== 'string' ) return false;
   }
   return true;
 }
@@ -21,7 +18,8 @@ const validateResponses = function(responsesList) {
 module.exports.create = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
-  if (typeof data.surveyId !== 'number' || !(validateResponses(data.responses))) {
+  if (typeof data.surveyId !== 'number' || !(validateResponses(data.responses))
+      || typeof data.id !== 'number') {
     console.error('Validation Failed');
     callback(new Error('Could not create survey response'));
     return;
@@ -30,6 +28,7 @@ module.exports.create = (event, context, callback) => {
   const params = {
     TableName: process.env.RESPONSES_TABLE,
     Item: {
+      id: data.id,
       surveyId: data.surveyId,
       MapAttribute: data.responses,
       createdAt: timestamp,
