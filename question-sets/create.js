@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-var validateQuestions = function(questionList){
+const validateQuestions = function(questionList) {
 
   if (!(Array.isArray(questionList))) return false;
 
