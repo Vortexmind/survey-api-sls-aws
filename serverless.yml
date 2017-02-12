@@ -74,7 +74,7 @@ functions:
           private: true
 
   createQuestionSet:
-      handler: questionSets/create.create
+      handler: question-sets/create.create
       events:
       - http:
           path: question-sets
