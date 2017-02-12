@@ -16,6 +16,7 @@ provider:
     SURVEYS_TABLE: survey-api-surveys-${opt:stage, self:provider.stage}
     QUESTION_SETS_TABLE: survey-api-question-sets-${opt:stage, self:provider.stage}
     RESPONSES_TABLE: survey-api-responses-${opt:stage, self:provider.stage}
+    EXPORTS_BUCKET: survey-api-exports-${opt:stage, self:provider.stage}
   iamRoleStatements:
       - Effect: Allow
         Action:
@@ -26,6 +27,10 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
         Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/survey-api-*"
+      - Effect: Allow
+        Action:
+            - s3:PutObject
+        Resource: "arn:aws:s3:::${self:provider.environment.EXPORTS_BUCKET}/*"
 
 functions:
   createSurvey:
@@ -91,8 +96,23 @@ functions:
           cors: true
           private: true
 
+  exportResponses:
+      handler: exports/export.export
+      events:
+      - http:
+          path: export/{id}
+          method: get
+          cors: true
+          private: true
+
 resources:
   Resources:
+    exportsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.EXPORTS_BUCKET}
+        AccessControl: AuthenticatedRead
+
     surveysTable:
       Type: AWS::DynamoDB::Table
       # DeletionPolicy: Retain
