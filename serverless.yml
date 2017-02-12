@@ -154,9 +154,9 @@ resources:
             - AttributeName: surveyId
               AttributeType: N
           KeySchema:
-            - AttributeName: id
-              KeyType: HASH
             - AttributeName: surveyId
+              KeyType: HASH
+            - AttributeName: id
               KeyType: RANGE
           ProvisionedThroughput:
               ReadCapacityUnits: 1
