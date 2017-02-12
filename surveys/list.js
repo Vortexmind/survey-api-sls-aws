@@ -17,17 +17,11 @@ module.exports.list = (event, context, callback) => {
       return;
     }
 
-    var bodyVal;
-
-    if (result.Count > 0) {
-      bodyVal = result.Items;
-    } else {
-      bodyVal = {};
-    }
+    var bodyVal = (result.Count > 0) ? result.Items : {};
 
     const response = {
       statusCode: 200,
-      body: JSON.stringify(bodyVal);
+      body: JSON.stringify(bodyVal)
     };
     callback(null, response);
   });
