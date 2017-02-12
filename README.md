@@ -7,8 +7,8 @@ To use:
 * Set up serverless framework https://serverless.com/
 * Ensure the following environment variables are set (change values as necessary)
 
-SLS_STAGE = dev
-SLS_REGION = eu-west-1
-SLS_PROFILE = your aws cli profile
+ * SLS_STAGE = dev
+ * AWS_REGION = eu-west-1
+ * AWS_PROFILE = your aws cli profile
 
 The aws profile configuration is described at https://serverless.com/framework/docs/providers/aws/guide/credentials/
